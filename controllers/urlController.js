@@ -16,7 +16,7 @@ exports.validateUrl = (req, res, next) => {
   next();
 };
 
-exports.createNewUrl = catchAsync(async (req, res) => {
+exports.createNewUrl = catchAsync(async (req, res, next) => {
   const originalUrl = req.body.url;
   const urlId = shortCode(6);
   const shortUrl = `${req.protocol}://${req.get("host")}/api/v1/url/${urlId}`;
