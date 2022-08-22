@@ -1,4 +1,5 @@
 const Url = require("../models/urlModel");
+const catchAsync = require("../utils/catchAsync");
 const nanoid = require("nanoid");
 const validUrl = require("valid-url");
 
@@ -15,25 +16,19 @@ exports.validateUrl = (req, res, next) => {
   next();
 };
 
-exports.createNewUrl = async (req, res) => {
-  try {
-    const originalUrl = req.body.url;
-    const urlId = shortCode(6);
-    const shortUrl = `${req.protocol}://${req.get("host")}/api/v1/url/${urlId}`;
-    const newUrl = await Url.create({
-      originalUrl,
-      urlId,
-      shortUrl,
-    });
-
-    console.log(shortCode);
-    res.status(201).json({
-      status: "success",
-      data: {
-        newUrl,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+exports.createNewUrl = catchAsync(async (req, res) => {
+  const originalUrl = req.body.url;
+  const urlId = shortCode(6);
+  const shortUrl = `${req.protocol}://${req.get("host")}/api/v1/url/${urlId}`;
+  const newUrl = await Url.create({
+    originalUrl,
+    urlId,
+    shortUrl,
+  });
+  res.status(201).json({
+    status: "success",
+    data: {
+      newUrl,
+    },
+  });
+});

@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const CatchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/AppError");
 
 const urlSchema = new mongoose.Schema({
   originalUrl: {
@@ -24,21 +26,6 @@ const urlSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
-
-urlSchema.pre("save", async function (next) {
-  const check = this.constructor.findOne(
-    { originalUrl: this.originalUrl },
-    (err, url) => {
-      if (err) {
-        return next(err);
-      }
-      if (url) {
-        return next(new Error("Url already exists"));
-      }
-      next();
-    }
-  );
 });
 
 module.exports = mongoose.model("Url", urlSchema);
