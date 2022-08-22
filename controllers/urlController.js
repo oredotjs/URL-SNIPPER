@@ -2,6 +2,7 @@ const Url = require("../models/urlModel");
 const catchAsync = require("../utils/catchAsync");
 const nanoid = require("nanoid");
 const validUrl = require("valid-url");
+const AppError = require("../utils/AppError");
 
 const shortCode = (number) => {
   return nanoid(number);
@@ -30,5 +31,48 @@ exports.createNewUrl = catchAsync(async (req, res, next) => {
     data: {
       newUrl,
     },
+  });
+});
+
+exports.getUrl = catchAsync(async (req, res, next) => {
+  const url = await Url.findOne({ urlId: req.params.urlId });
+  if (!url) {
+    return next(
+      new AppError(`No url found with urlId ${req.params.urlId}`, 404)
+    );
+  }
+  if (url) {
+    url.clicks++;
+    await url.save();
+    res.status(200).json({
+      status: "success",
+      data: {
+        url,
+      },
+    });
+  }
+});
+
+exports.getAllUrls = catchAsync(async (req, res, next) => {
+  const urls = await Url.find();
+  res.status(200).json({
+    status: "success",
+    results: urls.length,
+    data: {
+      urls,
+    },
+  });
+});
+
+exports.deleteUrl = catchAsync(async (req, res, next) => {
+  const url = await Url.findByIdAndDelete(req.params.urlId);
+  if (!url) {
+    return next(
+      new AppError(`No url found with urlId ${req.params.urlId}`, 404)
+    );
+  }
+  res.status(204).json({
+    status: "success",
+    data: null,
   });
 });
