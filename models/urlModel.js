@@ -27,5 +27,6 @@ const urlSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+urlSchema.index({ urlId: 1 });
 
 module.exports = mongoose.model("Url", urlSchema);
