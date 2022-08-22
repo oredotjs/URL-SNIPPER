@@ -5,5 +5,8 @@ router
   .route("/")
   .post(urlController.createNewUrl)
   .get(urlController.getAllUrls);
-router.route("/:urlId").get(urlController.getUrl);
+router
+  .route("/:urlId")
+  .get(urlController.getUrl)
+  .delete(urlController.deleteUrl);
 module.exports = router;

@@ -65,7 +65,7 @@ exports.getAllUrls = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteUrl = catchAsync(async (req, res, next) => {
-  const url = await Url.findByIdAndDelete(req.params.urlId);
+  const url = await Url.findOneAndDelete(req.params.urlId);
   if (!url) {
     return next(
       new AppError(`No url found with urlId ${req.params.urlId}`, 404)
