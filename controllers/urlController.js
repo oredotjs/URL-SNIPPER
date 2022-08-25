@@ -76,3 +76,20 @@ exports.deleteUrl = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
+
+exports.createCustomUrl = catchAsync(async (req, res, next) => {
+  const originalUrl = req.body.url;
+  const urlId = req.body.customName;
+  const shortUrl = `${req.protocol}://${req.get("host")}/api/v1/url/${urlId}`;
+  const url = await Url.create({
+    originalUrl,
+    urlId,
+    shortUrl,
+  });
+  res.status(201).json({
+    status: "success",
+    data: {
+      url,
+    },
+  });
+});
